@@ -20,7 +20,6 @@
           placeholder="girl"
           v-model="subject"
         />
-        <p class="text-red-500 text-xs italic" v-if="error">display error.</p>
       </div>
       <div class="mb-6">
         <label class="block text-gray-700 text-sm font-bold mb-2" for="verb">
@@ -33,7 +32,6 @@
           placeholder="read"
           v-model="verb"
         />
-        <p class="text-red-500 text-xs italic" v-if="error">display error.</p>
       </div>
       <div class="mb-6">
         <label class="block text-gray-700 text-sm font-bold mb-2" for="object">
@@ -46,7 +44,7 @@
           placeholder="book"
           v-model="object"
         />
-        <p class="text-red-500 text-xs italic" v-if="error">display error.</p>
+        <p class="text-red-500 text-xs italic">{{ validationError }}</p>
       </div>
       <div class="flex items-center justify-between">
         <button
@@ -57,32 +55,67 @@
         </button>
         <button
           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          type="button"
+          type="submit"
+          @click="handleSubmit"
         >
           Submit
         </button>
       </div>
     </form>
+    <div>{{ returnedSentence }}</div>
   </div>
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, reactive } from "vue";
+import axios from "axios";
 
 export default {
   name: "CardInput",
   setup() {
     // Your setup logic here
-    const error = ref(false);
+    let validationError = ref("");
+    let returnedSentence = ref("");
     const subject = ref("");
     const verb = ref("");
     const object = ref("");
 
+    const options = reactive({
+      method: "GET",
+      url: "https://linguatools-sentence-generating.p.rapidapi.com/realise",
+      params: {
+        object: object,
+        subject: subject,
+        verb: verb,
+      },
+      headers: {
+        "X-RapidAPI-Key": "5c774a765fmsh5df914e934fece7p1b3364jsneb69d7ce4f23",
+        "X-RapidAPI-Host": "linguatools-sentence-generating.p.rapidapi.com",
+      },
+    });
+
+    async function handleSubmit(event) {
+      event.preventDefault();
+      try {
+        const response = await axios.request(options);
+        console.log("response", response.data);
+        returnedSentence.value = response.data.sentence;
+
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
+        validationError.value = error.response.data.error_message;
+      }
+    }
+
     return {
-      error,
+      validationError,
+      returnedSentence,
       subject,
       verb,
-      object, // Your data, methods, and computed properties here
+      object,
+      options,
+      handleSubmit,
     };
   },
 };
