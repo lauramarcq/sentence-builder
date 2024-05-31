@@ -1,18 +1,28 @@
 <template>
-  <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
-  <CardInputVue></CardInputVue>
+  <TopNav></TopNav>
+  <div class="min-h-full">
+    <Header></Header>
+    <main>
+      <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 min-h-screen">
+        <MainStage></MainStage>
+      </div>
+    </main>
+  </div>
 </template>
 
 <script>
-import CardInputVue from './components/CardInput.vue'
-// import HelloWorld from './components/HelloWorld.vue'
+import TopNav from "./components/TopNav.vue";
+import Header from "./components/Header.vue";
+import MainStage from "./components/MainStage.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    CardInputVue
-  }
-}
+    TopNav,
+    Header,
+    MainStage,
+  },
+};
 </script>
 
 <style>
@@ -21,7 +31,5 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
